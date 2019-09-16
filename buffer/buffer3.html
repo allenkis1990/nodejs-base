@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="file" id="file">
+<script>
+    var file = document.getElementById('file')
+    file.addEventListener('change',function(e){
+        console.log(e.target.files[0]);
+        var f = e.target.files[0]
+        var reader = new FileReader()
+        reader.addEventListener('load',function(eee){
+            var res = eee.target.result
+            res = res.replace(/^data:(.*?);base64,/ig,'')
+            console.log(res);
+            ajaxDo(res)
+        })
+        reader.readAsDataURL(f)
+
+    })
+
+    function ajaxDo(file){
+        var params = new FormData()
+        params.append('base64',file)
+        $http({
+            url:'/chunkSaveBase64',
+            method:'post',
+            data:params,
+            headers:{
+            },
+            cb:function(data){
+
+            }
+        })
+    }
+
+
+
+    //工具AJAX函数
+    function $http(options){
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState ===4){
+                if(xhr.status>=200&&xhr.status<400){
+//                    console.log(xhr.responseText);
+                    options.cb && options.cb(xhr.responseText);
+                }
+            }
+        }
+        xhr.open(options.method,options.url,true)
+        if(options.headers){
+            for(var h in options.headers){
+                xhr.setRequestHeader(h,options.headers[h]);
+            }
+        }
+        xhr.send(options.data?options.data:null)
+    }
+</script>
+</body>
+</html>
