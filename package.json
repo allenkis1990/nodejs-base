@@ -1,0 +1,23 @@
+{
+  "name": "node-base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allenkis1990/nodejs-base.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allenkis1990/nodejs-base/issues"
+  },
+  "homepage": "https://github.com/allenkis1990/nodejs-base#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "formidable": "^1.2.1"
+  }
+}

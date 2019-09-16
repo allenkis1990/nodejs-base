@@ -22,7 +22,6 @@ function onData(req,cb) {
     form.parse(req);
 }
 
-
 app.get('/',function(req,res){
     res.sendFile(path.resolve('./buffer2.html'))
 })
