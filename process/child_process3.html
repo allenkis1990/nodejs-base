@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button onclick="startService()">开启服务</button>
+<button onclick="closeChildService()">关闭服务</button>
+
+<script>
+    function startService(){
+        $http({
+            method:'get',
+            url:'/startNewService',
+            cb:function(data){
+                console.log(data,121212);
+                window.open('http://'+data,'_blank')
+            }
+        })
+    }
+    function closeChildService(){
+        $http({
+            method:'get',
+            url:'/closeChildService',
+            cb:function(data){
+                console.log(data);
+            }
+        })
+    }
+
+
+
+    //工具AJAX函数
+    function $http(options){
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState ===4){
+                if(xhr.status>=200&&xhr.status<400){
+//                    console.log(xhr.responseText);
+                    options.cb && options.cb(xhr.responseText);
+                }
+            }
+        }
+        xhr.open(options.method,options.url,true)
+        if(options.headers){
+            for(var h in options.headers){
+                xhr.setRequestHeader(h,options.headers[h]);
+            }
+        }
+        xhr.send(options.data?options.data:null)
+    }
+</script>
+
+</body>
+</html>
