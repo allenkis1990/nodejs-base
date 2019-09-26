@@ -1,7 +1,7 @@
 /**
  * Created by Allen Liu on 2019/9/19.
  */
-
+//使用子进程开启和关闭web服务
 var os = require('os')
 var networkInterfaces =  os.networkInterfaces()
 // console.log(networkInterfaces);
@@ -41,7 +41,7 @@ app.get('/closeChildService',function(req,res){
 
 
 var ip = getIp(networkInterfaces)
-app.listen('8989',ip)
+app.listen('9999',ip)
 
 function getIp(obj){
     var res = ''

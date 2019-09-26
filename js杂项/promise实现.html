@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    function Promise_2(pFn){
+        var _this = this
+        this.state = 'pending'
+        this.value = ''
+        this.resolveList = []
+        this.rejectList = []
+        function resolve(value){
+            if(_this.state==='pending'){
+                _this.state = 'resolve'
+                _this.value = value
+                _this.resolveList.forEach(function(res){
+                    res(value)
+                })
+            }
+        }
+        function reject(value){
+            if(_this.state==='pending'){
+                _this.state = 'reject'
+                _this.value = value
+                _this.rejectList.forEach(function(rej){
+                    rej(value)
+                })
+            }
+        }
+        pFn(resolve,reject)
+    }
+    Promise_2.prototype.then = function(resolveFn,rejectFn){
+        //非异步的resolve直接执行
+        if(this.state==='resolve'){
+            resolveFn(this.value)
+        }
+//        非异步的reject直接执行
+        if(this.state==='reject'){
+            rejectFn(this.value)
+        }
+        //异步的情况下先把方法存起来，timeout过后再执行
+        if(this.state==='pending'){
+            resolveFn&&this.resolveList.push(resolveFn)
+            rejectFn&&this.rejectList.push(rejectFn)
+        }
+    }
+
+    new Promise_2(function(resolve,reject){
+        setTimeout(function(){
+            resolve('abc!!!!')
+        },3000)
+    }).then(function(data){
+        console.log(data);
+    },function(){
+        console.log(22222);
+    })
+
+</script>
+</body>
+</html>

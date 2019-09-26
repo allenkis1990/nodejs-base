@@ -7,6 +7,7 @@ var app = express()
 var os = require('os')
 var networkInterfaces =  os.networkInterfaces()
 var ip = getIp(networkInterfaces)
+console.log(process.pid,'子进程ID');
 process.on('message',function(msg){
     console.log(msg,8888);
     process.send(ip+':10086')

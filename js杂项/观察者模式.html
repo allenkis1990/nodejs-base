@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    function Watcher(){
+        this.state = ''
+        this.watcherList = []
+    }
+    Watcher.prototype.addWatch = function(shili){
+        //订阅
+        this.watcherList.push(shili)
+    }
+    Watcher.prototype.changeState = function(state){
+        var _this = this
+        this.state = state
+        //发布！
+        this.watcherList.forEach(function(shili){
+            shili.update(_this.state)
+        })
+    }
+
+
+    function PP(name){
+        this.name = name
+    }
+    PP.prototype.update = function(state){
+        console.log(this.name+'监控到状态：'+state);
+    }
+    var p1 = new PP('p1')
+    var p2 = new PP('p2')
+
+    var w = new Watcher()
+    w.addWatch(p1)
+    w.addWatch(p2)
+
+    w.changeState('haha')
+    w.changeState('hehe')
+
+
+</script>
+</body>
+</html>
