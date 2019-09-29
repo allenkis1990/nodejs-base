@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button onclick="clickBtn()">click</button>
+
+<script>
+    function clickBtn(){
+        var XHR = new XMLHttpRequest()
+        XHR.onreadystatechange = function(){
+            if(XHR.readyState ===4){
+                if(XHR.status>=200&&XHR.status<400){
+                    console.log(XHR.statusText);
+                }
+            }
+        }
+        XHR.open('get','/haha?a1=allen&a2=haha',true)
+        XHR.send(null)
+    }
+</script>
+</body>
+</html>
