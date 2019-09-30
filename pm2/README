@@ -1,6 +1,8 @@
 
 官网：http://pm2.keymetrics.io/docs/usage/quick-start/
 
+#初始化配置文件：pm2 init
+
 # PM2默认日志位置在c：\ users \ user \ .pm2 \ logs
 # 启动配置里所有进程
 pm2 start ecosystem.config.js
