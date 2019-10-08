@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+//    var p =new Promise((resolve,reject)=>{
+//        setTimeout(()=>{
+//            resolve(123)
+//            throw 111
+//        },3000)
+//    }).then(function(data){
+//        console.log(data);
+//    },function(err){
+//        console.log(err,111);
+//    })
+
+Promise.race([new Promise((resolve,reject)=>{ setTimeout(()=>{resolve(123)},3000)}),new Promise((resolve,reject)=>{resolve(456)})]).then(function(data){
+    console.log(data,1212);
+})
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    /**
+     * 主要功能
+     * @param fn 执行器
+     * @constructor
+     * 1.promise.prototype.then
+     * 2.promise.prototype.catch
+     * 3.promise.race
+     * 4.promise.all
+     * 5.promise.promisify (把原来的回调方式变成promise的then方式)
+     * 6.promise.resolve
+     * 7.promise.reject
+     * 8.promise.defer
+     */
+
+
+    function Promise_self(fn){
+//        console.log(123);
+        var _this = this
+        this.status = 'pending'
+        this.value = undefined
+        this.reason = undefined
+        this.resolveList = []
+        this.rejectList = []
+        function resolve(value){
+            //这里一定要加if(_this.status==='pending')否则会重复执行
+            if(_this.status==='pending'){
+                _this.status = 'resolve'
+                _this.value = value
+                _this.resolveList.forEach((fn)=>{
+                    fn()
+                })
+            }
+        }
+        function reject(reason){
+            //这里一定要加if(_this.status==='pending')否则会重复执行
+            if(_this.status==='pending'){
+                _this.status = 'reject'
+                _this.reason = reason
+                _this.rejectList.forEach((fn)=>{
+                    fn()
+                })
+            }
+        }
+        try {
+            fn(resolve,reject)
+        }catch(e){
+            reject(e)
+        }
+//        fn(resolve,reject)
+
+    }
+
+
+    Promise_self.defer = function(){
+        var dtd = {}
+        dtd.promise = new Promise_self((resolve,reject)=>{
+            dtd.resolve = resolve
+            dtd.reject = reject
+        })
+        return dtd
+    }
+
+
+    Promise_self.resolve = function(){
+        return new Promise((resolve,reject)=>{
+            resolve()
+        })
+    }
+    Promise_self.reject = function(){
+        return new Promise((resolve,reject)=>{
+            reject()
+        })
+    }
+
+
+    function resolvePromise(promise,x,resolve,reject){
+//        console.log(promise,x);
+//        var called
+//        if(called){
+//            return
+//        }
+        if(x===promise){
+            return reject(new TypeError('循环引用promise'))
+        }
+
+
+        let called
+        if(x!==null && typeof x==='object'){
+            try{
+                //x可能是一个promise
+                var then = x.then
+                if(typeof then==='function'){
+                    //then方法是一个function就当作是x是一个promise
+                    then.call(x,(y)=>{
+                        //如果y一直是一个promise就递归不是为止
+
+                        if(called){
+                            return
+                        }
+                        called = true
+                        resolvePromise(promise,y,resolve,reject)
+                    },(r)=>{
+                        if(called){
+                            return
+                        }
+                        called = true
+                        reject(r)
+                    })
+                }else{
+                    resolve(then)
+                }
+            }catch(e){
+                if(called){
+                    return
+                }
+                called = true
+
+                reject(e)
+            }
+        }else{
+            //x是基本数据类型直接resolve
+            resolve(x)
+        }
+//        called = true
+    }
+
+    Promise_self.prototype.then = function(resolveFn,rejectFn){
+        var promise2 = new Promise_self((resolve,reject)=>{
+            //值的穿透
+            resolveFn = typeof resolveFn==='function'?resolveFn:()=>this.value
+            rejectFn = typeof rejectFn==='function'?rejectFn:(err)=>{throw err}
+//            console.log(this.status);
+//            console.log(this.status);
+            if(this.status === 'pending'){
+                this.resolveList.push(()=>{
+
+                    try{
+                        var x = resolveFn(this.value)
+//                    console.log(x);
+                        resolvePromise(promise2,x,resolve,reject)
+                    }catch(e){
+                        reject(e)
+                    }
+                })
+                this.rejectList.push(()=>{
+
+                    try{
+                        var x = rejectFn(this.reason)
+                        resolvePromise(promise2,x,resolve,reject)
+                    }catch(e){
+                        reject(e)
+                    }
+
+                })
+            }
+            if(this.status === 'resolve'){
+                try{
+                    var x = resolveFn(this.value)
+                    setTimeout(()=>{
+                        resolvePromise(promise2,x,resolve,reject)
+                    },0)
+                }catch(e){
+                    reject(e)
+                }
+            }
+            if(this.status === 'reject'){
+
+                try{
+                    var x= rejectFn(this.reason)
+                    setTimeout(()=>{
+                        resolvePromise(promise2,x,resolve,reject)
+                    },0)
+                }catch(e){
+                    reject(e)
+                }
+            }
+
+        })
+        return promise2
+    }
+
+
+
+    Promise_self.prototype.catch = function(rejectFn){
+        var promise2 = new Promise_self((resolve,reject)=>{
+            //值的穿透
+            rejectFn = typeof rejectFn==='function'?rejectFn:(err)=>{throw err}
+//            console.log(this.status);
+//            console.log(this.status);
+            if(this.status === 'pending'){
+                this.rejectList.push(()=>{
+
+                    try{
+                        var x = rejectFn(this.reason)
+                        resolvePromise(promise2,x,resolve,reject)
+                    }catch(e){
+                        reject(e)
+                    }
+
+                })
+            }
+            if(this.status === 'reject'){
+
+                try{
+                    var x= rejectFn(this.reason)
+                    setTimeout(()=>{
+                        resolvePromise(promise2,x,resolve,reject)
+                    },0)
+                }catch(e){
+                    reject(e)
+                }
+            }
+
+        })
+        return promise2
+    }
+
+
+
+
+
+    //只要有一个执行完就resolve
+    Promise_self.race = function (raceList) {
+        return new Promise_self((resolve,reject)=>{
+            for(let i=0;i<raceList.length;i++){
+                var current = raceList[i]
+                if(current && current.then && typeof current.then==='function'){
+                    current.then((y)=>{
+                        resolve(y)
+                    },(r)=>{
+                        reject(r)
+                    })
+                }else{
+                    resolve(current)
+                }
+            }
+        })
+    }
+//    Promise_self.race([new Promise((resolve,reject)=>{ setTimeout(()=>{resolve(123)},3000)}),new Promise((resolve,reject)=>{resolve(456)})]).then(function(data){
+//        console.log(data,1212);
+//    })
+//    Promise_self.race([1,2]).then(function(data){
+//        console.log(data,1212);
+//    })
+
+
+    //全部执行完的时候resolve
+    Promise_self.all = function(values){
+        var count = 0
+        var result = []
+        return new Promise_self((resolve,reject)=>{
+            function commonDo(val){
+                count ++
+                result.push(val)
+                if(count===values.length){
+                    resolve(result)
+                }
+            }
+            for(let i=0;i<values.length;i++){
+                var current = values[i]
+                if(current && current.then && typeof current.then==='function'){
+                    current.then((y)=>{
+                        commonDo(y)
+                    },(r)=>{
+                        commonDo(r)
+                    })
+                }else{
+                    commonDo(current)
+                }
+            }
+        })
+    }
+
+//    Promise_self.all([1,2,3]).then(function(data){
+//        console.log(data);
+//    })
+    Promise_self.all([new Promise((resolve,reject)=>{ setTimeout(()=>{resolve(123)},3000)}),new Promise((resolve,reject)=>{resolve(456)}),new Promise((resolve,reject)=>{reject('err')})]).then(function(data){
+        console.log(data);
+    })
+
+
+
+    //模拟fs.readFile
+    function readFile(a,b,cb){
+        setTimeout(()=>{
+            cb(a+b)
+        },3000)
+    }
+
+    Promise_self.promisify = function(fn){
+        return function(...arg){
+//            var args = Array.from(arguments)
+            return new Promise((resolve,reject)=>{
+                fn(...arg,(data)=>{
+                    resolve(data)
+                })
+//                var cb = (data)=>{
+//                    resolve(data)
+//                }
+//                args.push(cb)
+//                fn.apply(null,args)
+            })
+        }
+    }
+    var rf = Promise_self.promisify(readFile)
+    rf('lwh','18').then((data)=>{
+        console.log(data);
+    })
+
+
+    var p = new Promise_self((resolve,reject)=>{
+//        setTimeout(function(){
+//            resolve('lwh')
+        //这里异步抛错也会抛出来 如果是同步之前resolve就不会抛
+//            throw 1111
+//        },2000)
+        resolve('lwh')
+//        throw 777
+    })
+    p.then(function(){
+        var defer = Promise_self.defer(),
+            promise = defer.promise
+//        console.log(defer);
+        setTimeout(function(){
+            defer.resolve('000000')
+        },2000)
+        return promise
+    }).then(function(data){
+        console.log(data);
+        var defer = Promise_self.defer(),
+            promise = defer.promise
+//        console.log(defer);
+        setTimeout(function(){
+            defer.resolve('111111')
+        },3000)
+        return promise
+    }).then(function(data){
+        console.log(data);
+    })
+
+
+    //测试catch
+
+    var p2 = new Promise_self((resolve,reject)=>{
+        resolve('p2')
+//        throw 'fuck'
+    })
+
+    p2.then(()=>{
+        throw 'p2 err'
+    }).catch((err)=>{
+        console.log(err);
+    })
+
+</script>
+</body>
+</html>
