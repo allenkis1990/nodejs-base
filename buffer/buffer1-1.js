@@ -26,12 +26,17 @@ console.log(Buffer.isBuffer(b));//true
 // 如果 target 与 buf 相同，则返回 0。
 // 如果 target 排在 buf 前面，则返回 1。
 // 如果 target 排在 buf 后面，则返回 -1。
-//equal方法的话只要长度相等就可以
+
 var compare1 = Buffer.from('ooo')
 var compare2 = compare1
 var compare3 = Buffer.from('ooo')
 console.log('compare1和compare2对比结果：'+compare1.compare(compare2));
 console.log('compare1和compare3对比结果：'+compare1.compare(compare3));
+
+//equals方法的话只要长度和内容相等就可以
+var equal1 = Buffer.from('abc')
+var equal2 = Buffer.from('abc')
+console.log(equal1.equals(equal2),99999);
 
 
 

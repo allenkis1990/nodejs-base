@@ -11,6 +11,7 @@ var buffer2 = Buffer.from('刘伟恒','utf8')
 console.log(buffer2);
 
 var buffer3 = Buffer.alloc(buffer2.length)
+//buffer2源  buffer3target    0target开始 0源开始 6源结束
 buffer2.copy(buffer3,0,0,6)
 console.log(buffer3.toString());//刘伟
 
