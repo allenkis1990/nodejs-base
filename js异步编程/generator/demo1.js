@@ -50,8 +50,9 @@ function task(g){
     var gen = g()
     function next(){
         var result = gen.next()
+        //done完成了就不执行了
         if(result.done){
-            return false
+           return false
         }
         var itemTask = result.value
         itemTask(next)
