@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var obj = {
+        name:'allen',
+        a1:{
+            name:'a1'
+        }
+    }
+    observe(obj)
+    function observe(data){
+        Object.keys(data).forEach((key)=>{
+            defineProperty(data,key,data[key])
+            //值还是对象的话一直递归到是基本类型为止
+            if(Object.prototype.toString.call(data[key])==='[object Object]'){
+                observe(data[key])
+            }
+        })
+    }
+
+    function defineProperty(data,key,val){
+        Object.defineProperty(data,key,{
+            set(nv){
+                console.log('旧值：'+data[key]+',新值：' + nv);
+            },
+            get(){
+                return val
+            }
+        })
+    }
+
+    obj.a1.name=11212
+
+</script>
+</body>
+</html>

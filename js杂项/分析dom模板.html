@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app"><div class="main"><div class="header">标题<span class="close">x</span></div><div class="content"><p>段落1</p><p>段落1</p></div><div class="footer"><button>确定</button><button>取消</button></div></div></div>
+<script>
+    NodeList.prototype.forEach = Array.prototype.forEach
+    function TemplateCompiler(options){
+        this.el = options.el
+        var utils = TemplateCompiler.utils
+        if(!utils.isNodeType(this.el)){
+            this.el = document.querySelector(this.el)
+        }
+        var fragment = this.appendNodeToFragment(this.el)
+        this.eachNode(fragment)
+//        console.log(fragment);
+    }
+    TemplateCompiler.prototype.appendNodeToFragment = function(node){
+//        console.log(node);
+        var fragment = document.createDocumentFragment(),
+        firstChild
+//        console.log(node.firstChild);
+        function ap(){
+            if(firstChild = node.firstChild){
+                fragment.appendChild(firstChild)
+                ap()
+            }
+        }
+        ap()
+        return fragment
+    }
+
+
+    //把里面的所有元素打平输出不管是父亲还是儿子
+    TemplateCompiler.prototype.eachNode = function(fragment){
+//        console.log(fragment.childNodes);
+        var childNodes = fragment.childNodes
+        var allChildNodeList = []
+        function eachPush(childNodes){
+            childNodes.forEach((node)=>{
+                allChildNodeList.push(node)
+                //如果还有子元素递归
+                if(node.childNodes&&node.childNodes.length){
+                    eachPush(node.childNodes)
+                }
+            })
+        }
+        eachPush(childNodes)
+        console.log(allChildNodeList);
+    }
+
+    TemplateCompiler.utils = {
+        isNodeType(node){
+            return node.nodeType===1
+        },
+        isTextType(node){
+            return node.nodeType===3
+        }
+    }
+
+    new TemplateCompiler({
+        el:'#app'
+    })
+</script>
+</body>
+</html>
