@@ -1,7 +1,7 @@
 /**
  * Created by Allen Liu on 2019/9/29.
  */
-//使用webstrom断点，run文件使用debug模式 f8下一个断点  f6一行一行
+//使用webstrom断点，run文件使用debug模式 f8下一个断点  f6一行一行  alt+shift+f7进入具体方法  shift+f8跳出
 
 var express = require('express')
 var app = express()
