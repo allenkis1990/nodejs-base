@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+//    document.cookie = 'a=1;expires='+new Date(new Date().getTime()+60000).toGMTString()
+    function $http(method,url){
+        var XHR = new XMLHttpRequest()
+        XHR.onreadystatechange = function(){
+            if(XHR.readyState===4){
+                if(XHR.status>=200&&XHR.status<400){
+                    console.log(XHR.responseText);
+                }
+            }
+        }
+        XHR.open(method,url)
+        XHR.send(null)
+    }
+    $http('get','/a1')
+    $http('get','/a2')
+</script>
+</body>
+</html>

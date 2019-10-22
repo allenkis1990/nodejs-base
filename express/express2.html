@@ -7,6 +7,7 @@
 <body>
 <script>
     var XHR = new XMLHttpRequest()
+    XHR.withCredentials= true;
     XHR.onreadystatechange = function(){
         if(XHR.readyState===4){
             if(XHR.status>=200&&XHR.status<400){

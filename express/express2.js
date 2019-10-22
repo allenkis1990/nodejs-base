@@ -12,6 +12,9 @@ var path = require('path')
 app.get('/',function(req,res){
     res.sendFile(path.resolve('./express2.html'))
 })
+app.get('/a',function(req,res){
+    res.sendFile(path.resolve('./express2.html'))
+})
 
 
 

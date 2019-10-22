@@ -7,7 +7,10 @@ var app = express()
 
 
 app.use('/a', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    //如果要携带cookie Origin不能设置为*
+    // res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "http://127.0.0.1:8081");
     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
     res.header("Access-Control-Allow-Headers", "lwh,Range");
     next();
@@ -18,6 +21,7 @@ app.get('/',function(req,res){
 })
 app.get('/a',function(req,res){
     // res.statusCode='206'
+    res.setHeader('Set-Cookie','hahahkkkk')
     res.send('fuck you mouse')
 })
 
