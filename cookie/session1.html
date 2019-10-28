@@ -6,50 +6,21 @@
 </head>
 <body>
 <script>
-//    document.cookie = 'a=1;expires='+new Date(new Date().getTime()+60000).toGMTString()
-    function $http(method,url){
+    //    document.cookie = 'a=1;expires='+new Date(new Date().getTime()+60000).toGMTString()
+    function $http(method, url) {
         var XHR = new XMLHttpRequest()
-        XHR.onreadystatechange = function(){
-            if(XHR.readyState===4){
-                if(XHR.status>=200&&XHR.status<400){
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState === 4) {
+                if (XHR.status >= 200 && XHR.status < 400) {
                     console.log(XHR.responseText);
                 }
             }
         }
-        XHR.open(method,url)
+        XHR.open(method, url)
         XHR.send(null)
     }
-    $http('get','/a1')
 
-    /*var arr1 = [
-        {name:'a1'},
-        {name:'a2'},
-        {name:'a3'},
-        {name:'a4'}
-    ]
-    var arr2 = [
-        {name:'a3'},
-        {name:'a4'},
-        {name:'a5'},
-        {name:'a6'}
-    ]
-
-    var arr3 = [].concat(arr1,arr2)
-
-    var a = arr3.reduce(function(pre,next){
-        var idx = pre.findIndex(function(it,i){
-            return it.name===next.name
-        })
-        if(idx<=-1){
-            pre.push(next)
-        }
-        return pre
-    },[])
-
-console.log(a);*/
-
-
-console.log(a);
+    $http('get', '/a1')
 </script>
 </body>
 </html>
