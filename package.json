@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/allenkis1990/nodejs-base#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "formidable": "^1.2.1",
     "mz": "^2.7.0"
   }
