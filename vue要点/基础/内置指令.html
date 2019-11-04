@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <button @click="changeNum(3)">change1</button>
+    <button @click="changeNum(7)">change2</button>
+
+
+    <!--v-show不支持template-->
+    <template v-if="num==3">1</template>
+    <template v-if="num==7">2</template>
+
+
+    <!--xss攻击里面放标签-->
+    <input type="text" v-model="haha">
+    <div v-html="haha"></div>
+
+    <div v-for="(val,key) in obj">
+        {{key}}-{{val}}
+    </div>
+</div>
+<script src="../vue.min.js"></script>
+
+
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            haha:'',
+            num:0,
+            obj:{
+                name:'allen',
+                age:18,
+                job:'web'
+            }
+        },
+        methods:{
+            changeNum(num){
+                this.num = num
+            }
+        },
+        mounted(){
+            console.log(this.$el);
+            console.log(this.$options);
+            console.log(this.$nextTick);
+        }
+    })
+</script>
+</body>
+</html>

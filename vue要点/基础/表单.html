@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <!--v-model由v-bind:value 和 v-on:input组成-->
+    <input type="text" :value="msg"  @input="msg=$event.target.value">
+    {{msg}}
+
+    <select v-model="selectModel">
+        <option value="" disabled>请选择</option>
+        <option v-for="(item,index) in selectArr" :value="item.id">{{item.name}}</option>
+    </select>
+    {{selectModel}}
+</div>
+<script src="../vue.min.js"></script>
+
+
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            msg:'',
+            selectArr:[
+                {name:'骑车',id:'a1'},
+                {name:'跑步',id:'a2'},
+                {name:'打球',id:'a3'}
+            ],
+            selectModel:''
+        },
+        methods:{
+
+        },
+        mounted(){
+
+        }
+    })
+</script>
+</body>
+</html>

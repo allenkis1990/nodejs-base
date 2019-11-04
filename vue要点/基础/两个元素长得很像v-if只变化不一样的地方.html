@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <button @click="fn">click</button>
+    <!--不加key的话在input里输了内容切换的时候不会改变-->
+    <div v-if="flag" key="1">
+        name:allen<input type="text">
+    </div>
+    <div v-if="!flag" key="2">
+        name:jack<input type="text">
+    </div>
+</div>
+<script src="../vue.min.js"></script>
+
+
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            flag:true
+        },
+        methods:{
+            fn(){
+                this.flag = !this.flag
+            }
+        },
+        mounted(){
+
+        }
+    })
+</script>
+</body>
+</html>
