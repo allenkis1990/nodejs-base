@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="file" id="file">
+<script>
+    /**
+     * 文件转base64
+     * 步骤
+     * 1.获取file input的dom
+     * 2.监听file input改变并且得到文件对象
+     * 3.new一个FileReader 使用api  readAsDataURL
+     * 4.当reader的load方法执行的时候取到base64
+     */
+    let fileDom = document.getElementById('file')
+    fileDom.addEventListener('change',function (e) {
+        let file = e.target.files[0]
+
+        let reader = new FileReader()
+        reader.addEventListener('load',function(e){
+            let base64Str = e.target.result
+            console.log(base64Str);
+        })
+        reader.readAsDataURL(file)
+    })
+</script>
+</body>
+</html>

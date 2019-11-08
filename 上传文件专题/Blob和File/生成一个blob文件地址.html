@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    /**
+     * Blob 生成一个js文件 并且插入到页面上
+     * 步骤
+     * 1.创建一个js文件的内容字符串
+     * 2.new 一个 Blob
+     * 3.window.URL.createObjectURL(blob) 生成一个js文件的blob地址
+     * 4.blob的url只能在当前浏览器打开 换个浏览器就不行
+     */
+
+    let content = 'alert(123)'
+    let blob = new Blob([content],{type:'application/javascript'})
+    let blobUrl = window.URL.createObjectURL(blob)
+    console.log(blobUrl);
+
+    let script = document.createElement('script')
+    script.src = blobUrl
+    document.documentElement.appendChild(script)
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="file" id="file">
+<script>
+    var file = document.getElementById('file')
+    //每片大小
+    var chunkSize = 10000
+    file.addEventListener('change',function(e){
+        console.log(e.target.files[0]);
+        var fileObj = e.target.files[0]//afei.jpg
+        var fileName = fileObj.name.match(/^(.*?)(\.jpg)/)[1]//afei
+        var fileExt = fileObj.name.match(/^(.*?)(\.jpg)/)[2]//jpg
+//        console.log(fileName,fileExt);
+        var fileSize = fileObj.size
+        console.log(fileSize);//总大小60881
+        var chunkNum = Math.ceil(fileSize/chunkSize)//60881/10000 想上取整 总共几块
+        console.log(chunkNum);//7
+        for(let i=0;i<chunkNum;i++){
+            //slice返回blob
+            var blob = fileObj.slice(i*chunkSize,chunkSize*(i+1),'image/jpeg')//0-10000 10000-20000 ~~~ 6000~60881
+
+            var nF = new File([blob], fileName+'Chunk'+i+fileExt,{type:'image/jpeg'})
+            console.log(nF);
+
+            ajaxDo(nF,i,chunkNum)//文件对象，第几块，总共几块
+
+        }
+    })
+
+    function ajaxDo(file,curChunkNum,totalChunkNum){
+        var params = new FormData()
+        params.append('img',file)
+        params.append('chunkNum',curChunkNum)
+        params.append('totalChunk',totalChunkNum-1)
+        $http({
+            url:'/chunkSaveImg',
+            method:'post',
+            data:params,
+            headers:{
+            },
+            cb:function(data){
+                console.log(data);
+            }
+        })
+    }
+
+
+
+    //工具AJAX函数
+    function $http(options){
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState ===4){
+                if(xhr.status>=200&&xhr.status<400){
+//                    console.log(xhr.responseText);
+                    options.cb && options.cb(xhr.responseText);
+                }
+            }
+        }
+        xhr.open(options.method,options.url,true)
+        if(options.headers){
+            for(var h in options.headers){
+                xhr.setRequestHeader(h,options.headers[h]);
+            }
+        }
+        xhr.send(options.data?options.data:null)
+    }
+</script>
+</body>
+</html>

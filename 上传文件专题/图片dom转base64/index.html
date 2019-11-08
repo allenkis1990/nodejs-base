@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<img src="../images/afei.jpg" id="img">
+<script>
+    /**
+     * 图片dom转base64
+     * 步骤
+     * 1.获取图片dom
+     * 2.创建canvas并且获取上下文
+     * 3.调用drawImage方法
+     * 4.生成base64
+     */
+
+
+    let img = document.getElementById('img')
+//    console.log(img);
+    let canvas = document.createElement('canvas')
+    let context = canvas.getContext('2d')
+    context.drawImage(img,0,0,100,100)
+    let base64Str = canvas.toDataURL('image/jpeg')
+    console.log(base64Str);
+
+</script>
+</body>
+</html>

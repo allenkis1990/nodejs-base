@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    /**
+     * 创建一个文本文件对象
+     * 步骤
+     * 1.创建一个txt文件的内容字符串
+     * 2.new 一个 Blob
+     * 3.new File创建文件 参数是blob,文件名和mimetype
+     */
+
+    let content = '我是一个txt文本'
+    let blob = new Blob([content],{type:'text/plain'})
+    let txtFile = new File([blob],'haha.txt',{type:'text/plain'})
+    console.log(txtFile);
+</script>
+</body>
+</html>
