@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //过滤HTML标签
+    var filterHTMLTag = function (msg) {
+        var msg = msg.replace(/<\/?[^>]*>/g, ''); //去除HTML Tag
+        msg = msg.replace(/[|]*\n/, ''); //去除行尾空格
+        msg = msg.replace(/&.+;/ig, ''); //去掉nbsp
+        return msg;
+    };
+</script>
+</body>
+</html>

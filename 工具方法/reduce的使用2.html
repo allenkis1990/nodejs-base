@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var obj = {
+        o:{
+            name:'allen'
+        }
+    }
+
+    var str = 'o.name'
+    var arr = str.split('.')
+    //每次return的会作为第一个参数data
+    arr.reduce(function(data,current,idx,shuzu){
+        if(idx===shuzu.length-1){
+           return data[current] = 'fuck'
+        }
+        return data[current]
+    },obj)
+
+    console.log(obj);
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+
+
+
+
+    var obj1 = {name:'allen',haha:{obj:{name:'22'}},arr:[1,2,3,{name:'allen'}]}
+    var obj2 = {name:'allen',age:18,haha:{name:'haha',obj:{age:'33'}},arr:[{name:'allen2'}]}
+
+    var utils = {
+        copy:function(target){
+            var result
+            var objType = this.isObj(target)?'object':(Array.isArray(target)?'array':'')
+            if(typeof target!=='object'&&target!==null){
+                result = target
+            }else if(objType==='object'){
+                result = {}
+                for(let key in target){
+                    if(typeof target[key]==='object'){
+                        result[key] = this.copy(target[key])
+                    }else{
+                        result[key] = target[key]
+                    }
+                }
+            }else if(objType==='array'){
+                result = []
+                for(let i = 0;i<target.length;i++){
+                    if(typeof target[i]==='array'){
+                        result[i] = this.copy(target[i])
+                    }else{
+                        result[i] = target[i]
+                    }
+                }
+            }else{
+                result = target
+            }
+            return result
+        },
+        isObj:function(obj){
+            var type = Object.prototype.toString.call(obj)
+            if(type==='[object Object]'){
+                return true
+            }else{
+                return false
+            }
+        },
+        mergeObj:function(obj1,obj2){
+            var nObj = this.copy(obj1)
+            for(let i in obj1){
+                for(let j in obj2){
+                    if(i===j){
+                        //对比两个对象的key如果key相等看看值是不是对象如果是递归merge
+                        //如果不是obj2覆盖obj1
+                        if(typeof obj2[j]==='object'){
+                            nObj[i] = merge(obj1[i],obj2[j])
+                        }else{
+                            nObj[i] =  obj2[j]
+                        }
+
+                    }else{
+                        //如果两个key不相等就给obj1新增obj2的key这里注意如果obj2的key还是个对象的话要深拷贝
+                        if(typeof obj2[j]==='object'){
+                            nObj[j] = utils.copy(obj2[j])
+                        }else{
+                            nObj[j] =  obj2[j]
+                        }
+                    }
+                }
+            }
+            return nObj
+        },
+        isSameObj:function(obj1,obj2){
+            var obj1Sort = JSON.stringify(obj1).split('').sort()
+            var obj2Sort = JSON.stringify(obj2).split('').sort()
+            return JSON.stringify(obj1Sort)===JSON.stringify(obj2Sort)
+        },
+        mergeArray:function(arr1,arr2){
+            //数组每项转成字符串来比较完全相等的只取一个
+            var arr = [].concat(arr1,arr2)
+            var result = arr.reduce(function(pre,next){
+                var idx = pre.findIndex(function(item){
+                    return utils.isSameObj(item,next)
+                })
+                if(idx<=-1){
+                    pre.push(next)
+                }
+                return pre
+            },[])
+            return result
+        }
+    }
+
+    function merge(obj1,obj2){
+        var res
+        if(utils.isObj(obj1)&&utils.isObj(obj2)){
+            //两个都是对象的情况
+            res = utils.mergeObj(obj1,obj2)
+        }else if(Array.isArray(obj1)&&Array.isArray(obj2)){
+            //两个都是数组的情况
+            res = utils.mergeArray(obj1,obj2)
+        }else{
+            //其他的都是后面的覆盖前面的
+            res = utils.copy(obj2)
+        }
+        return res
+    }
+
+    var result = merge(obj1,obj2)
+
+    console.log(result);
+
+
+
+</script>
+</body>
+</html>

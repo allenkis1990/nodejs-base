@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var getDay = function(timeNum){
+        var dateObj = new Date(timeNum)
+        var dayArr = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
+        return dayArr[dateObj.getDay()]
+    }
+</script>
+</body>
+</html>

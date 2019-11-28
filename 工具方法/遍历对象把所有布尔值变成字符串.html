@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var parseBoolean =function(obj,objStr,cb){
+        if(typeof obj==='object'){
+            for(var key in obj){
+                if(obj.hasOwnProperty(key)){
+                    var str =  objStr+'["'+key+'"]'
+                    // console.log(str);
+                    parseBoolean(obj[key],str,cb)
+                }
+            }
+        }else{
+            if(typeof obj==='boolean'){
+                var evalStr = objStr + '=' + ('"'+obj+'"')
+                cb(evalStr)
+            }
+        }
+    }
+    var obj = {
+        bol:false,
+        obj:{
+            bol:true,
+            obj:{
+                bol:false,
+                haha:true
+            },
+            name:'allen'
+        }
+    }
+    parseBoolean(obj,'obj',function(data){
+        eval(data)
+    })
+    console.log(obj);
+</script>
+</body>
+</html>
