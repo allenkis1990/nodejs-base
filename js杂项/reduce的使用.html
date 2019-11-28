@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var obj = {
+        o:{
+            name:'allen'
+        }
+    }
+
+    var str = 'o.name'
+    var arr = str.split('.')
+    //每次return的会作为第一个参数data
+    var haha = arr.reduce(function(data,current,idx,shuzu){
+//        console.log(current,data);
+//        console.log(shuzu);
+        return data[current]
+    },obj)
+    console.log(haha);
+
+
+</script>
+</body>
+</html>
