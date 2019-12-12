@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul id="beforeLogin">
+    <li>
+        用户名：<input type="text" id="userName">
+    </li>
+    <li>
+        密码：<input type="text" id="userPsw">
+    </li>
+    <li>
+        <button onclick="login()">登录</button>
+    </li>
+</ul>
+
+<div id="afterLogin" style="display:none">登录成功 欢迎你admin</div>
+<script>
+    function $http(url,method,cb,headers){
+        let xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState===4){
+                if(xhr.status>=200&&xhr.status<400){
+                    var obj = JSON.parse(xhr.responseText)
+                    cb(obj)
+                }
+            }
+        }
+        xhr.open(method,url,true)
+        if(headers){
+            for(let key in headers){
+                xhr.setRequestHeader(key,headers[key])
+            }
+        }
+        xhr.send(null)
+    }
+    function login(){
+        var userName = document.querySelector('#userName').value
+        var userPsw = document.querySelector('#userPsw').value
+        $http(`/login?userName=${userName}&userPsw=${userPsw}`,'get',function(data){
+            if(data.code===200){
+                alert(data.msg)
+                localStorage.setItem('token',data.token)
+                document.querySelector('#beforeLogin').style.display = 'none'
+                document.querySelector('#afterLogin').style.display = 'block'
+            }else{
+                alert(data.msg)
+            }
+        })
+    }
+
+
+    function isLogin(){
+        var token = localStorage.getItem('token')
+//        console.log(token);
+        $http('/isLogin','get',function(data){
+            if(data.code===200){
+                //再重新设置一下token
+                localStorage.setItem('token',data.token)
+                document.querySelector('#beforeLogin').style.display = 'none'
+                document.querySelector('#afterLogin').style.display = 'block'
+            }
+        },{token:token})
+    }
+
+    isLogin()
+
+</script>
+</body>
+</html>
