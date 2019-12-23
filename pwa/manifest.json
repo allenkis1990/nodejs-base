@@ -1,0 +1,15 @@
+{
+  "name": "test PWA",
+  "short_name": "test PWA",
+  "description": "PWA is good",
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#313131",
+  "background_color": "#313131",
+  "icons": [
+    {
+      "src": "/pika.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }]
+}
