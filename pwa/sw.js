@@ -4,11 +4,13 @@
 
 importScripts('http://localhost:9898/workbox.js');
 if (workbox) {
-    console.log(`Yay! workbox is loaded11 `);
+    console.log(`Yay! workbox is loaded `);
 
     workbox.core.setCacheNameDetails({prefix:'lwh cache'})//设置缓存名字
+
     self.__precacheManifest = [].concat(self.__precacheManifest || [])
     workbox.precaching.suppressWarnings()
+    //一定要加否则离线不可用
     workbox.precaching.precacheAndRoute(self.__precacheManifest,{})
 
 
@@ -17,9 +19,11 @@ if (workbox) {
         '/',
         '/getData',
         '/index.js',
-        '/manifest.json'
+        '/manifest.json',
+        '/pika.png',
+        '/index.css'
     ])
-    console.log(workbox);
+    //console.log(workbox);
     /**
      * 1.cachefirst 缓存优先
      * 2.cacheonly 仅缓存
@@ -35,21 +39,25 @@ if (workbox) {
     workbox.routing.registerRoute(
         function(obj){
             return obj.url.pathname==='/'
-        }, workbox.strategies.networkFirst(),
+        }, workbox.strategies.staleWhileRevalidate(),
         function(obj){
             return obj.url.pathname==='/getData'
-        }, workbox.strategies.networkFirst(),
+        }, workbox.strategies.staleWhileRevalidate(),
         function(obj){
             return obj.url.pathname==='/index.js'
-        }, workbox.strategies.networkFirst(),
+        }, workbox.strategies.staleWhileRevalidate(),
         function(obj){
             return obj.url.pathname==='/manifest.json'
-        }, workbox.strategies.networkFirst()
+        }, workbox.strategies.staleWhileRevalidate(),
+        /\.(png|gif|jpg|jepg)/, workbox.strategies.networkFirst(),
+        /\.(js|css)/, workbox.strategies.staleWhileRevalidate()
+
     );
 
 
-
+    workbox.skipWaiting();
+    workbox.clientsClaim();
 }
 else {
-    console.log(`Boo! workbox didn't load `);
+    console.log(`Boo! workbox didn't load !!!!~~~`);
 }
