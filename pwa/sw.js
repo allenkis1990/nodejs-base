@@ -2,12 +2,15 @@
  * Created by Allen Liu on 2019/12/23.
  */
 
-importScripts('http://localhost:9898/workbox.js');
+importScripts('http://localhost:9898/workbox/workbox.js');
 if (workbox) {
 
     console.log(`Yay! workbox is loaded `);
+    workbox.setConfig({
+        modulePathPrefix: '/workbox/'
+    });
     //每次修改资源都要更新缓存的名字
-    let CACHE_NAME = 'lwh cache2'
+    let CACHE_NAME = 'lwh cache1'
     workbox.core.setCacheNameDetails({
         prefix: CACHE_NAME
         //suffix: 'v2',

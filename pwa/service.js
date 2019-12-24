@@ -9,6 +9,7 @@ let fs = require('fs')
 
 
 app.use(express.static(path.resolve('./')))
+app.use(express.static(path.resolve('./workbox')))
 
 
 app.get('/',function(req,res){
