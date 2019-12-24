@@ -6,6 +6,7 @@ importScripts('http://localhost:9898/workbox/workbox.js');
 if (workbox) {
 
     console.log(`Yay! workbox is loaded `);
+    //设置引用插件的基路径，指向本地的workbox文件夹
     workbox.setConfig({
         modulePathPrefix: '/workbox/'
     });
@@ -44,6 +45,7 @@ if (workbox) {
      */
 
 
+    //缓存路由策略
     workbox.routing.registerRoute(
         function (obj) {
             return obj.url.pathname === '/'
